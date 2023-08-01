@@ -1,16 +1,23 @@
 package com.enuygun.enuyguncookieemployeeapi.mapper;
 
+import com.enuygun.enuyguncookieemployeeapi.dto.response.error.EmployeeValidationsErrorResponse;
 import com.enuygun.enuyguncookieemployeeapi.dto.response.error.ExceptionErrorResponse;
-import java.time.LocalDateTime;
+
+import java.util.Map;
 
 public class ErrorResponseParser {
     private ErrorResponseParser() {}
 
-    public static ExceptionErrorResponse exceptionParser(String message, LocalDateTime timeStamp, int statusCode) {
+    public static ExceptionErrorResponse exceptionParser(String error, int statusCode) {
         return ExceptionErrorResponse.builder()
-                .status("failed")
-                .message(message)
-                .timeStamp(timeStamp)
+                .error(error)
+                .statusCode(statusCode)
+                .build();
+    }
+
+    public static EmployeeValidationsErrorResponse validationsErrorParser(Map<String, String> error, int statusCode) {
+        return EmployeeValidationsErrorResponse.builder()
+                .validationErrors(error)
                 .statusCode(statusCode)
                 .build();
     }

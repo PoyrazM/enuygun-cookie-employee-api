@@ -1,44 +1,53 @@
 package com.enuygun.enuyguncookieemployeeapi.exception.handler;
 
+import com.enuygun.enuyguncookieemployeeapi.dto.response.ApiResponse;
+import com.enuygun.enuyguncookieemployeeapi.dto.response.error.EmployeeValidationsErrorResponse;
 import com.enuygun.enuyguncookieemployeeapi.dto.response.error.ExceptionErrorResponse;
 import com.enuygun.enuyguncookieemployeeapi.exception.exceptions.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDateTime;
 
-import static com.enuygun.enuyguncookieemployeeapi.mapper.ErrorResponseParser.exceptionParser;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.enuygun.enuyguncookieemployeeapi.mapper.ErrorResponseParser.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmployeeNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    private ExceptionErrorResponse handleEmployeeNotFoundException(EmployeeNotFoundException exception) {
-        return exceptionParser(exception.getMessage(), LocalDateTime.now(), HttpStatus.NOT_FOUND.value());
+    private ApiResponse<ExceptionErrorResponse> handleEmployeeNotFoundException(EmployeeNotFoundException exception) {
+        return ApiResponse.error(exception.getMessage(), exceptionParser(HttpStatus.NOT_FOUND.toString(), HttpStatus.NOT_FOUND.value()));
     }
 
     @ExceptionHandler(EmployeeNotCreatedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    private ExceptionErrorResponse handleEmployeeNotCreatedException(EmployeeNotCreatedException exception) {
-        return exceptionParser(exception.getMessage(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value());
+    private ApiResponse<ExceptionErrorResponse> handleEmployeeNotCreatedException(EmployeeNotCreatedException exception) {
+        return ApiResponse.error(exception.getMessage(), exceptionParser(HttpStatus.BAD_REQUEST.toString(), HttpStatus.BAD_REQUEST.value()));
     }
 
     @ExceptionHandler(EmployeeNotUpdatedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    private ExceptionErrorResponse handleEmployeeNotUpdatedException(EmployeeNotUpdatedException exception) {
-        return exceptionParser(exception.getMessage(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value());
+    private ApiResponse<ExceptionErrorResponse> handleEmployeeNotUpdatedException(EmployeeNotUpdatedException exception) {
+        return ApiResponse.error(exception.getMessage(), exceptionParser(HttpStatus.BAD_REQUEST.toString(), HttpStatus.BAD_REQUEST.value()));
     }
 
     @ExceptionHandler(EmployeeNotDeletedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    private ExceptionErrorResponse handleEmployeeNotDeletedException(EmployeeNotDeletedException exception) {
-        return exceptionParser(exception.getMessage(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value());
+    private ApiResponse<ExceptionErrorResponse> handleEmployeeNotDeletedException(EmployeeNotDeletedException exception) {
+        return ApiResponse.error(exception.getMessage(), exceptionParser(HttpStatus.BAD_REQUEST.toString(), HttpStatus.BAD_REQUEST.value()));
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    private ExceptionErrorResponse handleJsonParseException() {
-        return exceptionParser("Missing Request Params", LocalDateTime.now(), HttpStatus.BAD_REQUEST.value());
+    private ApiResponse<EmployeeValidationsErrorResponse> handleValidationErrors(MethodArgumentNotValidException exception) {
+        Map<String, String> validationErrors = new HashMap<>();
+        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
+            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+        return ApiResponse.error("Validation Errors !", validationsErrorParser(validationErrors, HttpStatus.BAD_REQUEST.value()));
     }
 }

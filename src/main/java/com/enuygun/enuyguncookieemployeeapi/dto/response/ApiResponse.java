@@ -12,12 +12,12 @@ public class ApiResponse<T> implements Serializable {
     private LocalDateTime responseTime;
     private T data;
 
-    public ApiResponse(boolean isSuccess, String status, String message,  T data) {
+    public ApiResponse(boolean isSuccess, String status, String message, T data) {
         this.isSuccess = isSuccess;
         this.status = status;
         this.message = message;
-        this.data = data;
         this.responseTime = LocalDateTime.now();
+        this.data = data;
     }
 
     @Serial

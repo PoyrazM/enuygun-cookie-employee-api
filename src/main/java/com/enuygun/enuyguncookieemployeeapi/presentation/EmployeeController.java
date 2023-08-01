@@ -4,6 +4,7 @@ import com.enuygun.enuyguncookieemployeeapi.business.service.IEmployeeService;
 import com.enuygun.enuyguncookieemployeeapi.dto.request.EmployeeRequest;
 import com.enuygun.enuyguncookieemployeeapi.dto.response.ApiResponse;
 import com.enuygun.enuyguncookieemployeeapi.dto.response.EmployeeResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class EmployeeController {
     private final IEmployeeService employeeService;
 
     @PostMapping
-    ResponseEntity<ApiResponse<EmployeeResponse>> createEmployee(@RequestBody EmployeeRequest request) {
+    ResponseEntity<ApiResponse<EmployeeResponse>> createEmployee(@Valid @RequestBody EmployeeRequest request) {
         var createdEmployee = employeeService.createAnEmployee(request);
 
         return ResponseEntity
@@ -27,25 +28,27 @@ public class EmployeeController {
     }
 
     @GetMapping
-    ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
+    ResponseEntity<ApiResponse<List<EmployeeResponse>>> getAllEmployees() {
         var allEmployees = employeeService.receiveEmployees();
-        return ResponseEntity.ok(allEmployees);
+        return ResponseEntity.ok(ApiResponse.of("All Employees got successfully.", allEmployees));
     }
 
     @GetMapping(value = "/{username}")
-    ResponseEntity<EmployeeResponse> getEmployeeByUsername(@PathVariable String username) {
+    ResponseEntity<ApiResponse<EmployeeResponse>> getEmployeeByUsername(@PathVariable String username) {
         var employee = employeeService.receiveAnEmployeeByUsername(username);
-        return ResponseEntity.ok(employee);
+        return ResponseEntity.ok(ApiResponse.of("Employee got successfully.", employee));
     }
 
     @PutMapping(value = "/{username}")
-    ResponseEntity<EmployeeResponse> getEmployeeByUsername(@PathVariable String username, @RequestBody EmployeeRequest request) {
+    ResponseEntity<ApiResponse<EmployeeResponse>> getEmployeeByUsername(@PathVariable String username,
+                                                                        @Valid @RequestBody EmployeeRequest request) {
         var updatedEmployee = employeeService.updateEmployeeByUsername(request, username);
-        return ResponseEntity.ok(updatedEmployee);
+        return ResponseEntity.ok(ApiResponse.of("Employee credentials updated successfully.", updatedEmployee));
     }
 
     @DeleteMapping(value = "/{username}")
-    void deleteEmployeeByUsername(@PathVariable String username) {
+    ResponseEntity<ApiResponse<String>> deleteEmployeeByUsername(@PathVariable String username) {
         employeeService.deleteEmployeeByUsername(username);
+        return ResponseEntity.ok(ApiResponse.of("Employee credentials deleted successfully", null));
     }
 }
