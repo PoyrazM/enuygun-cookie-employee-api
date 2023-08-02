@@ -5,6 +5,6 @@ import com.enuygun.enuyguncookieemployeeapi.exception.base.BaseException;
 public class EmployeeNotFoundException extends BaseException {
     public EmployeeNotFoundException(String message) {
         super(message);
-        LOG.error("[EmployeeNotFoundException] -> message : {}", message);
+        log.error("[EmployeeNotFoundException] -> message : {}", message);
     }
 }

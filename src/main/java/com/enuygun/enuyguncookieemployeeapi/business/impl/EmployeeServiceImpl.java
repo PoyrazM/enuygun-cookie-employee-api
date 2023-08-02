@@ -37,7 +37,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Override
     public List<EmployeeResponse> receiveEmployees() {
         List<Employee> employees = employeeRepository.findAll();
-        List<EmployeeResponse> employeeResponse = mapper.entityListToDtoList(employees);
+        List<EmployeeResponse> employeeResponse = employees.stream().map(IEmployeeMapper.MAP::entityToDto).toList();
         if (!employeeResponse.isEmpty()) return employeeResponse;
         else throw new EmployeeNotFoundException(EmployeeExceptionTypes.EMPLOYEES_NOT_FOUND.getValue());
     }
@@ -59,7 +59,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
             mapper.updateDtoToEntity(request, updatedEmployee);
             employeeRepository.save(updatedEmployee);
             return mapper.entityToDto(updatedEmployee);
-        } else throw new EmployeeNotFoundException(EmployeeExceptionTypes.EMPLOYEE_NOT_UPDATED.getValue());
+        } else throw new EmployeeNotFoundException(EmployeeExceptionTypes.EMPLOYEE_NOT_UPDATED.getValue() + username);
     }
 
     @Override
@@ -67,6 +67,6 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Optional<Employee> employee = employeeRepository.findEmployeeByUsername(username);
         boolean isEmployeeExist = employee.isPresent();
         if (isEmployeeExist) employeeRepository.delete(employee.get());
-        else throw new EmployeeNotDeletedException(EmployeeExceptionTypes.EMPLOYEE_NOT_DELETED.getValue());
+        else throw new EmployeeNotDeletedException(EmployeeExceptionTypes.EMPLOYEE_NOT_DELETED.getValue() + username);
     }
 }

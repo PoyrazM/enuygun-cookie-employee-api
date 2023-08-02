@@ -6,13 +6,13 @@ import java.time.LocalDateTime;
 
 @Data
 public class ApiResponse<T> implements Serializable {
-    private boolean isSuccess;
+    private Boolean isSuccess;
     private String status;
     private String message;
     private LocalDateTime responseTime;
     private T data;
 
-    public ApiResponse(boolean isSuccess, String status, String message, T data) {
+    public ApiResponse(Boolean isSuccess, String status, String message, T data) {
         this.isSuccess = isSuccess;
         this.status = status;
         this.message = message;

@@ -1,16 +1,13 @@
 package com.enuygun.enuyguncookieemployeeapi.exception.handler;
 
 import com.enuygun.enuyguncookieemployeeapi.dto.response.ApiResponse;
-import com.enuygun.enuyguncookieemployeeapi.dto.response.error.EmployeeValidationsErrorResponse;
-import com.enuygun.enuyguncookieemployeeapi.dto.response.error.ExceptionErrorResponse;
+import com.enuygun.enuyguncookieemployeeapi.dto.response.error.*;
 import com.enuygun.enuyguncookieemployeeapi.exception.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.enuygun.enuyguncookieemployeeapi.mapper.ErrorResponseParser.*;
 

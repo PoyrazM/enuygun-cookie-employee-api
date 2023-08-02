@@ -2,7 +2,6 @@ package com.enuygun.enuyguncookieemployeeapi.mapper;
 
 import com.enuygun.enuyguncookieemployeeapi.dto.response.error.EmployeeValidationsErrorResponse;
 import com.enuygun.enuyguncookieemployeeapi.dto.response.error.ExceptionErrorResponse;
-
 import java.util.Map;
 
 public class ErrorResponseParser {
